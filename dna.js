@@ -18,11 +18,15 @@ class DNA {
         }
     }
 
-    crossover(c, partner) { // acho que vai ter que mudar esses parâmetros de entrada p/ os 2 pais
+    crossover(c, partner) { // lembrando que o this é o DNA da mãe
 
         if (random(1) < c) { // se for maior ou igual a c (no nosso caso 90%) ele faz o crossover
-            let child = new Array(this.genes.length);
-            let crossover = floor(random(this.genes.length));
+            let child1 = new Array(this.genes.length);
+            let child2 = new Array(this.genes.length);
+            let crossover = floor(random(this.genes.length)); // escolhe um ponto de partida do crossover no array
+
+            // esse for está quase certo, só precisa colocar dois filhos
+            //e fazer de um jeito que não repita os números
             for (let i = 0; i < this.genes.length; i++) {
                 if (i > crossover) child[i] = this.genes[i];
                 else child[i] = partner.genes[i];

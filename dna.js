@@ -41,13 +41,22 @@ class DNA {
 
     }
 
-    // ~ based on a mutation probability, picks a new random character in array spots ~
+    // baseado na prob. de mutação, troca duas posições do array entre si
     mutate(m) {
-        for (let i = 0; i < this.genes.length; i++) {
-            if (random(1) < m) {
-                this.genes[i] = random(0, 1);
+        let indexIguais = true;
+        let indice1 = Math.floor(Math.random() * 8);
+        let indice2 = 0;
+
+        while (indexIguais) {
+            indice2 = Math.floor(Math.random() * 8);
+            if (indice1 != indice2) {
+                indexIguais = false;
             }
         }
+        let temp = this.genes[indice2];
+        this.genes[indice2] = this.genes[indice1];
+        this.genes[indice1] = temp;
+
     }
 }
 

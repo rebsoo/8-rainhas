@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-
 <html>
+    <head></head>
 
-<head></head>
+    <body>
+        <div class="container">
+            <h1 class="titulo">As 8 Rainhas</h1>
+        </div>
+    </body>
 
-<body>
-
-    <div class="container">
-        <h1 class="titulo">As 8 Rainhas</h1>
-    </div>
-
-</body>
-
-<script src="main.js"></script>
-<script src="dna.js"></script>
-<script src="individual.js"></script>
-<script src="population.js"></script>
-
+    <script src="main.js"></script>
+    <script src="dna.js"></script>
+    <script src="individual.js"></script>
+    <script src="population.js"></script>
 </html>
+
+<script>
+    var population = new Population(0.4, 0.9, 100);
+
+    var count = 0;
+    while (population.getMaxFitness() != 1 && count <= 300){
+        population.evolveNewGeneration();
+        count++;
+    }
+</script>

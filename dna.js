@@ -1,80 +1,82 @@
-
 class DNA {
-    constructor(newgenes) {
-        // DNA is random permutation of int values between 1 and 8
-        // The genetic sequence
-        // It needs to be in binary representation
-        if (newgenes) {
-            this.genes = newgenes;
+    constructor(genes_) {
+        if (genes_) {
+            this.genes = genes_;
         } else {
-            let permutacao = [1, 2, 3, 4, 5, 6, 7, 8]; // Já que temos 8 rainhas para posicionar
-            shuffle(permutacao);
-            for (let i = 0; i < permutacao.length; i++) {
-                let binario = permutacao[i].toString(2); // Passa o número da permutação para binário
-                binario = ('0000' + binario).slice(-4); // Preenche com zeros a esquerda se necessário
-                permutacao[i] = binario; // Número binário com 4 casas adicionado a permutação
+            let genes = [1, 2, 3, 4, 5, 6, 7, 8];
+            shuffle(genes);
+
+            for (let i = 0; i < genes.length; i++) {
+                genes[i] = ('0000' + genes[i].toString(2)).slice(-4);
             }
-            this.genes = permutacao;
+            this.genes = genes;
         }
     }
 
-    crossover(c, partner) { // lembrando que o this é o DNA da mãe
+    getGenes() {
+        return this.genes;
+    };
 
-        if (random(1) < c) { // se for maior ou igual a c (no nosso caso 90%) ele faz o crossover
-            let child1 = new Array(this.genes.length);
-            let child2 = new Array(this.genes.length);
-            let crossover = floor(random(this.genes.length)); // escolhe um ponto de partida do crossover no array
+    crossover(crossoverRate, partnerDNA) { 
+        if (Math.random() < crossoverRate) {
+            var corte = (Math.floor(Math.random() * 6) + 1); // retorna de 1 - 6
 
-            // esse for está quase certo, só precisa colocar dois filhos
-            //e fazer de um jeito que não repita os números
-            for (let i = 0; i < this.genes.length; i++) {
-                if (i > crossover) child[i] = this.genes[i];
-                else child[i] = partner.genes[i];
+            var momGenes1 = this.genes.slice(0, corte);
+            var momGenes2 = this.genes.slice(corte);
+
+            var dadGenes1 = partnerDNA.getGenes().slice(0, corte);
+            var dadGenes2 = partnerDNA.getGenes().slice(corte);
+            
+            var child1Genes = momGenes1.concat(dadGenes2);                                                                                                                                                                                                                 
+            var child2Genes = dadGenes1.concat(momGenes2);
+
+            for (let i = corte; i < child1Genes.length; i++) {
+                if (momGenes1.includes(child1Genes[i])) {
+                    for (let ii = 0; ii < dadGenes1.length; ii++){
+                        if(!child1Genes.slice(0, i).includes(dadGenes1[ii])) {
+                            child1Genes[i] = dadGenes1[ii];
+                        }
+                    }
+                }
             }
-            let newgenes = new DNA(child);
-            return newgenes;
+
+            for (let i = corte; i < child2Genes.length; i++) {
+                if (dadGenes1.includes(child2Genes[i])) {
+                    for (let ii = 0; ii < momGenes1.length; ii++){
+                        if(!child2Genes.slice(0, i).includes(momGenes1[ii])) {
+                            child2Genes[i] = momGenes1[ii];
+                        }
+                    }
+                }
+            }
         } else {
-            // repetir o mesmo gene dos pais = 2 filhos com cada um
-            // sendo a cópia idêntica de um dos pais
-
+            var child1Genes =  this.genes;                                                                                                                                                                                                          
+            var child2Genes =  partnerDNA.getGenes();
         }
-
+        return {
+            child1Genes: new DNA(child1Genes), 
+            child2Genes: new DNA(child2Genes)
+        };
+        
     }
 
-    // baseado na prob. de mutação, troca duas posições do array entre si
-    mutate(m) {
-        let indexIguais = true;
-        let indice1 = Math.floor(Math.random() * 8);
-        let indice2 = 0;
+    mutate(mutationRate) {
+        if (Math.random() < mutationRate) {
+            let sameIndex = true;
+            let index1 = Math.floor(Math.random() * 8);
+            let index2 = 0;
 
-        while (indexIguais) {
-            indice2 = Math.floor(Math.random() * 8);
-            if (indice1 != indice2) {
-                indexIguais = false;
+        while (sameIndex) {
+            index2 = Math.floor(Math.random() * 8);
+            if (index1 != index2) {
+                sameIndex = false;
             }
         }
-        let temp = this.genes[indice2];
-        this.genes[indice2] = this.genes[indice1];
-        this.genes[indice1] = temp;
+        let temp = this.genes[index2];
+        this.genes[index2] = this.genes[index1];
+        this.genes[index1] = temp;
 
+        }
     }
 }
 
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}

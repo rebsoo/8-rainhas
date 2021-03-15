@@ -18,7 +18,7 @@
     var population = new Population(0.4, 0.9, 100);
 
     var count = 0;
-    while (population.getMaxFitness() != 1 && count <= 300){
+    while (population.getMaxFitness() != 1 && count <= 10000){
         population.evolveNewGeneration();
         count++;
     }

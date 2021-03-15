@@ -15,11 +15,18 @@
 </html>
 
 <script>
-    var population = new Population(0.4, 0.9, 100);
+    var population = new Population(0.2, 0.9, 150);
 
-    var count = 0;
-    while (population.getMaxFitness() != 1 && count <= 10000){
-        population.evolveNewGeneration();
-        count++;
+    var finalGeneration = -1;
+    if (population.getMaxFitness() < 1){
+        while (finalGeneration == -1 &&  population.getGenerations() <= 10001){
+            finalGeneration = population.evolveNewGeneration();
+        }
+    }else{
+        finalGeneration = 1;
     }
+
+    console.log(finalGeneration);
+    console.log(population.getSolutions());
+    console.log(population.getAverageFitness())
 </script>

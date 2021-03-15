@@ -4,7 +4,7 @@ class Population {
         this.mutationRate = mutationRate_;
         this.crossoverRate = crossoverRate_;
         this.individuals = [];
-        this.generations = 0;
+        this.generations = 1;
         this.matingPool = [];
 
         for (let i = 0; i < quantity; i++) {
@@ -22,6 +22,12 @@ class Population {
         this.individuals[this.individuals.length-1] = children.child2;
 
         this.generations++;
+        
+        if (children.child1.getFitness() == 1 || children.child2.getFitness() == 1) {
+            return this.generations;
+        } else {
+            return -1;
+        }
     }
 
     selection() {
@@ -43,6 +49,7 @@ class Population {
         };
     }
 
+
     getMaxFitness() {
         let record = this.individuals[0].getFitness();
         for (let i = 0; i < this.individuals.length; i++) {
@@ -51,5 +58,27 @@ class Population {
             }
         }
         return record;
+    }
+
+    getSolutions() {
+        let solutions = [];
+        for (let i = 0; i < this.individuals.length; i++) {
+            if (this.individuals[i].getFitness() == 1) {
+                solutions.push(this.individuals[i].getDNA().getGenes());
+            }
+        }
+        return solutions;
+    }
+
+    getAverageFitness() {
+        let fitnessSum = 0;
+        for (let i = 0; i < this.individuals.length; i++) {
+            fitnessSum = fitnessSum + this.individuals[i].getFitness();
+        }
+        return fitnessSum/this.individuals.length;
+    }
+
+    getGenerations() {
+        return this.generations;
     }
 }

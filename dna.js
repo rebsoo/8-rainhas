@@ -5,10 +5,6 @@ class DNA {
         } else {
             let genes = [1, 2, 3, 4, 5, 6, 7, 8];
             shuffle(genes);
-
-            for (let i = 0; i < genes.length; i++) {
-                genes[i] = ('0000' + genes[i].toString(2)).slice(-4);
-            }
             this.genes = genes;
         }
     }
@@ -19,18 +15,18 @@ class DNA {
 
     crossover(crossoverRate, partnerDNA) { 
         if (Math.random() < crossoverRate) {
-            var corte = (Math.floor(Math.random() * 6) + 1); // retorna de 1 - 6
+            var croppingIndex = (Math.floor(Math.random() * 6) + 1); 
 
-            var momGenes1 = this.genes.slice(0, corte);
-            var momGenes2 = this.genes.slice(corte);
+            var momGenes1 = this.genes.slice(0, croppingIndex);
+            var momGenes2 = this.genes.slice(croppingIndex);
 
-            var dadGenes1 = partnerDNA.getGenes().slice(0, corte);
-            var dadGenes2 = partnerDNA.getGenes().slice(corte);
+            var dadGenes1 = partnerDNA.getGenes().slice(0, croppingIndex);
+            var dadGenes2 = partnerDNA.getGenes().slice(croppingIndex);
             
             var child1Genes = momGenes1.concat(dadGenes2);                                                                                                                                                                                                                 
             var child2Genes = dadGenes1.concat(momGenes2);
 
-            for (let i = corte; i < child1Genes.length; i++) {
+            for (let i = croppingIndex; i < child1Genes.length; i++) {
                 if (momGenes1.includes(child1Genes[i])) {
                     for (let ii = 0; ii < dadGenes1.length; ii++){
                         if(!child1Genes.slice(0, i).includes(dadGenes1[ii])) {
@@ -40,7 +36,7 @@ class DNA {
                 }
             }
 
-            for (let i = corte; i < child2Genes.length; i++) {
+            for (let i = croppingIndex; i < child2Genes.length; i++) {
                 if (dadGenes1.includes(child2Genes[i])) {
                     for (let ii = 0; ii < momGenes1.length; ii++){
                         if(!child2Genes.slice(0, i).includes(momGenes1[ii])) {

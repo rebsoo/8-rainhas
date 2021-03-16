@@ -15,11 +15,11 @@
 </html>
 
 <script>
-    var population = new Population(0.2, 0.9, 150);
+    var population = new Population(0.8, 0.9, 200);
 
     var finalGeneration = -1;
     if (population.getMaxFitness() < 1){
-        while (finalGeneration == -1 &&  population.getGenerations() <= 10001){
+        while (finalGeneration == -1 &&  population.getGenerations() <= 10000){
             finalGeneration = population.evolveNewGeneration();
         }
     }else{

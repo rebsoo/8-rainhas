@@ -1,4 +1,3 @@
-
 class Population {
     constructor(mutationRate_, crossoverRate_, quantity) {
         this.mutationRate = mutationRate_;
@@ -17,7 +16,7 @@ class Population {
         this.selection();
         let children = this.reproduction();
 
-        this.individuals.sort((a, b) => (a.getFitness > b.getFitness) ? 1 : -1);
+        this.individuals.sort((a, b) => (a.getFitness() > b.getFitness()) ? 1 : -1);
         this.individuals[this.individuals.length-2] = children.child1;
         this.individuals[this.individuals.length-1] = children.child2;
 
@@ -31,24 +30,43 @@ class Population {
     }
 
     selection() {
-        shuffle(this.individuals);
-        this.matingPool = this.individuals.slice(0, 5);
+        this.individuals.sort((a, b) => (a.getFitness() > b.getFitness()) ? 1 : -1);
+        let individualsLen = this.individuals.length;
+        
+        let chosenIndividuals = [-1, -1];
+        for (let i = 0; i < 2; i++){
+            while (chosenIndividuals[i] == -1) {
+                let randomNumber = Math.floor(Math.random() * 1.4*individualsLen);
+                let chosenIndividual = -1;
+                
+                if (randomNumber < (0.3 * individualsLen)) {
+                    if (chosenIndividual)
+                    chosenIndividual = Math.floor(randomNumber / 3);
+                } else if (randomNumber >= (0.3 * individualsLen) && randomNumber < (0.7 * individualsLen)) {
+                    chosenIndividual = Math.floor((randomNumber - ((0.1 * individualsLen)) / 2));
+                } else {
+                    chosenIndividual = randomNumber - (0.4 * individualsLen);
+                }
+
+                if (!chosenIndividuals.includes(chosenIndividual)){
+                    chosenIndividuals[i] = chosenIndividual;
+                    this.matingPool.push(this.individuals[chosenIndividual]);
+                }  
+            }
+        }
     }
 
     reproduction() {
-        this.matingPool.sort((a, b) => (a.getFitness > b.getFitness) ? 1 : -1);
-        let parents = this.matingPool.slice(0, 2);
-
-        let momDNA = parents[0].getDNA();
-        let dadDNA = parents[1].getDNA();
+        let momDNA = this.matingPool[0].getDNA();
+        let dadDNA = this.matingPool[1].getDNA();
         let childrenGenes = momDNA.crossover(this.crossoverRate, dadDNA);
 
+        this.matingPool = [];
         return {
             child1: new Individual(childrenGenes.child1Genes), 
             child2: new Individual(childrenGenes.child2Genes)
         };
     }
-
 
     getMaxFitness() {
         let record = this.individuals[0].getFitness();
